@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>For Bhavanika 🎀</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Caveat:wght@500;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-1:#fbeef3;
+    --bg-2:#efe6f7;
+    --wrap-rose:#e7a9be;
+    --wrap-lavender:#c9aee0;
+    --wrap-gold:#cba35c;
+    --wrap-gold-dark:#a9803e;
+    --ink:#4a3b4f;
+    --ink-soft:#7a6580;
+    --accent:#b75c7c;
+    --cream:#fff9f2;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    background: linear-gradient(160deg, var(--bg-1) 0%, var(--bg-2) 55%, #f6e9ef 100%);
+    font-family: 'Quicksand', sans-serif;
+    color: var(--ink);
+    overflow-x: hidden;
+  }
+
+  /* ambient floating blobs */
+  .blob {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(50px);
+    opacity: 0.35;
+    z-index: 0;
+    pointer-events: none;
+    animation: drift 16s ease-in-out infinite;
+  }
+  .blob-a { width: 280px; height: 280px; background: var(--wrap-rose); top: -60px; left: -80px; animation-delay: 0s; }
+  .blob-b { width: 320px; height: 320px; background: var(--wrap-lavender); bottom: -100px; right: -100px; animation-delay: -6s; }
+  .blob-c { width: 200px; height: 200px; background: #f3d9b1; top: 40%; right: -60px; animation-delay: -10s; }
+
+  @keyframes drift {
+    0%, 100% { transform: translate(0,0) scale(1); }
+    50% { transform: translate(20px,-25px) scale(1.08); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .blob { animation: none; }
+  }
+
+  main {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 16px 64px;
+  }
+
+  .eyebrow {
+    font-family: 'Caveat', cursive;
+    font-size: 1.5rem;
+    color: var(--accent);
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+  }
+
+  h1.title {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    font-size: clamp(1.8rem, 5vw, 2.6rem);
+    margin: 0 0 6px;
+    text-align: center;
+    color: var(--ink);
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: var(--ink-soft);
+    text-align: center;
+    max-width: 320px;
+    margin: 0 0 28px;
+    line-height: 1.5;
+  }
+
+  .subtitle .spark { display: inline-block; animation: sparkle 1.8s ease-in-out infinite; }
+  @keyframes sparkle {
+    0%, 100% { opacity: 0.4; transform: scale(0.9) rotate(0deg); }
+    50% { opacity: 1; transform: scale(1.15) rotate(10deg); }
+  }
+
+  /* the gift stage */
+  .stage {
+    position: relative;
+    width: min(88vw, 380px);
+  }
+
+  .tag {
+    position: absolute;
+    top: -34px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-6deg);
+    background: var(--cream);
+    border: 1.5px solid var(--wrap-gold);
+    border-radius: 6px;
+    padding: 7px 16px 8px;
+    font-family: 'Caveat', cursive;
+    font-size: 1.15rem;
+    color: var(--ink);
+    box-shadow: 0 4px 10px rgba(120, 80, 60, 0.15);
+    z-index: 5;
+    line-height: 1.25;
+    text-align: center;
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .tag::before {
+    content: '';
+    position: absolute;
+    top: -13px;
+    left: 50%;
+    width: 2px;
+    height: 14px;
+    background: var(--wrap-gold-dark);
+    transform: translateX(-50%);
+  }
+  .tag::after {
+    content: '';
+    position: absolute;
+    top: -16px;
+    left: 50%;
+    width: 8px;
+    height: 8px;
+    border: 1.5px solid var(--wrap-gold-dark);
+    border-radius: 50%;
+    transform: translateX(-50%);
+    background: var(--cream);
+  }
+  .tag.hidden-tag { opacity: 0; transform: translateX(-50%) rotate(-6deg) translateY(-14px); pointer-events: none; }
+
+  .card-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 18px 40px rgba(120, 70, 100, 0.22), 0 2px 8px rgba(120,70,100,0.12);
+    background: var(--cream);
+  }
+
+  /* the hidden reveal layer underneath the scratch canvas */
+  .reveal-layer {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    background: var(--cream);
+  }
+
+  .reveal-photo {
+    width: 100%;
+    height: 56%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .reveal-text {
+    flex: 1;
+    padding: 18px 20px 26px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    scroll-behavior: smooth;
+  }
+
+  .reveal-heading {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    line-height: 1.4;
+    color: var(--accent);
+    margin: 0 0 4px;
+  }
+
+  .reveal-message {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--ink);
+    margin: 0;
+  }
+
+  .reveal-final {
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  .msg-divider {
+    text-align: center;
+    color: var(--wrap-gold-dark);
+    opacity: 0.55;
+    font-size: 0.8rem;
+    margin: 6px 0;
+  }
+
+  .reveal-signoff {
+    font-family: 'Caveat', cursive;
+    font-size: 1.35rem;
+    color: var(--accent);
+    margin-top: 6px;
+    text-align: right;
+  }
+
+  /* thin, unobtrusive scrollbar for the message area */
+  .reveal-text::-webkit-scrollbar { width: 4px; }
+  .reveal-text::-webkit-scrollbar-thumb { background: var(--wrap-rose); border-radius: 4px; }
+
+  /* scratch canvas sits on top */
+  canvas.scratch {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    touch-action: none;
+    cursor: grab;
+    transition: opacity 0.9s ease;
+  }
+  canvas.scratch:active { cursor: grabbing; }
+  canvas.scratch.faded { opacity: 0; pointer-events: none; }
+
+  .hint {
+    position: absolute;
+    left: 50%;
+    bottom: 16px;
+    transform: translateX(-50%);
+    font-family: 'Caveat', cursive;
+    font-size: 1.05rem;
+    color: var(--cream);
+    background: rgba(74, 59, 79, 0.55);
+    padding: 5px 14px;
+    border-radius: 20px;
+    pointer-events: none;
+    z-index: 4;
+    transition: opacity 0.5s ease;
+    white-space: nowrap;
+  }
+  .hint.hidden-hint { opacity: 0; }
+
+  .fallback {
+    margin-top: 16px;
+    background: none;
+    border: none;
+    color: var(--ink-soft);
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.78rem;
+    text-decoration: underline;
+    cursor: pointer;
+    opacity: 0.7;
+  }
+  .fallback:hover { opacity: 1; }
+  .fallback.hidden-fallback { display: none; }
+
+  /* falling petals after reveal */
+  .petal {
+    position: fixed;
+    top: -30px;
+    font-size: 1.1rem;
+    pointer-events: none;
+    z-index: 6;
+    animation: fall linear forwards;
+    opacity: 0.9;
+  }
+  @keyframes fall {
+    to { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="blob blob-a"></div>
+<div class="blob blob-b"></div>
+<div class="blob blob-c"></div>
+
+<main>
+  <div class="eyebrow">gift no. 1 of many</div>
+  <h1 class="title">Happy Birthday, Bhavanika 🎀</h1>
+  <p class="subtitle"><span class="spark">✨</span> scratch the wrapping paper to open your gift <span class="spark">✨</span></p>
+
+  <div class="stage">
+    <div class="tag" id="tag">To: Bhavanika<br>From: Deepan</div>
+
+    <div class="card-frame">
+      <div class="reveal-layer">
+        <img class="reveal-photo" src="./bhavanika-photo.jpg" alt="A memory of us">
+        <div class="reveal-text">
+          <p class="reveal-heading">from the boy who fallen for you 100times a day —</p>
+
+          <p class="reveal-message">heyy thangow.</p>
+
+          <p class="reveal-message">it's just one of my small gifts for you.</p>
+
+          <p class="reveal-message">since I can't give anything in real life, I just wanna give you lots of surprise gifts online.</p>
+
+          <p class="reveal-message">and this is not written by any AI — it's written by my love for you.</p>
+
+          <div class="msg-divider">✦</div>
+
+          <p class="reveal-message">we just started to care for both of us.</p>
+
+          <p class="reveal-message">and I guess I already fell for you more than 100 times a day.</p>
+
+          <p class="reveal-message">I just loved the way you care, your voice, your cuteness in the way you talk, your anger, your decisions, your confidence — etc, etc.</p>
+
+          <p class="reveal-message">I love every single thing about you.</p>
+
+          <div class="msg-divider">✦</div>
+
+          <p class="reveal-message">I know you're focused on your studies and have a fear of losing.</p>
+
+          <p class="reveal-message">but I guess that won't happen once you start to love the way I do.</p>
+
+          <p class="reveal-message">so can we just start our relationship — one I want to end in marriage.</p>
+
+          <p class="reveal-message">yes, I want you to be with me till death.</p>
+
+          <div class="msg-divider">✦</div>
+
+          <p class="reveal-message reveal-final">happy birthday, and I love youu, mineey.</p>
+          <p class="reveal-signoff">— yours, Deepan</p>
+        </div>
+      </div>
+
+      <canvas class="scratch" id="scratchCanvas"></canvas>
+      <div class="hint" id="hint">scratch me open ✨</div>
+    </div>
+
+    <button class="fallback" id="fallbackBtn">having trouble scratching? tap to unwrap</button>
+  </div>
+</main>
+
+<script>
+(function () {
+  const canvas = document.getElementById('scratchCanvas');
+  const ctx = canvas.getContext('2d');
+  const frame = canvas.closest('.card-frame');
+  const hint = document.getElementById('hint');
+  const tag = document.getElementById('tag');
+  const fallbackBtn = document.getElementById('fallbackBtn');
+
+  let revealed = false;
+  let hintFaded = false;
+
+  function sizeCanvas() {
+    const rect = frame.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    canvas.style.width = rect.width + 'px';
+    canvas.style.height = rect.height + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    drawWrap(rect.width, rect.height);
+  }
+
+  function drawWrap(w, h) {
+    // base diagonal gradient
+    const grad = ctx.createLinearGradient(0, 0, w, h);
+    grad.addColorStop(0, '#eab6c8');
+    grad.addColorStop(0.5, '#ddb3dd');
+    grad.addColorStop(1, '#c9aee0');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, w, h);
+
+    // diagonal stripe pattern
+    ctx.save();
+    ctx.globalAlpha = 0.16;
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 10;
+    for (let x = -h; x < w + h; x += 26) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x + h, h);
+      ctx.stroke();
+    }
+    ctx.restore();
+
+    // scattered dots
+    ctx.save();
+    ctx.globalAlpha = 0.5;
+    ctx.fillStyle = '#fff5fa';
+    const dotSeedCols = Math.ceil(w / 34);
+    const dotSeedRows = Math.ceil(h / 34);
+    for (let i = 0; i < dotSeedCols; i++) {
+      for (let j = 0; j < dotSeedRows; j++) {
+        const dx = i * 34 + ((j % 2) * 17) + 10;
+        const dy = j * 34 + 10;
+        ctx.beginPath();
+        ctx.arc(dx, dy, 2.1, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+    ctx.restore();
+
+    // ribbon bands
+    const bandW = Math.max(34, w * 0.13);
+    const cx = w / 2;
+    const cy = h / 2;
+
+    const ribGrad1 = ctx.createLinearGradient(cx - bandW / 2, 0, cx + bandW / 2, 0);
+    ribGrad1.addColorStop(0, '#a9803e');
+    ribGrad1.addColorStop(0.5, '#e3c07d');
+    ribGrad1.addColorStop(1, '#a9803e');
+    ctx.fillStyle = ribGrad1;
+    ctx.fillRect(cx - bandW / 2, 0, bandW, h);
+
+    const ribGrad2 = ctx.createLinearGradient(0, cy - bandW / 2, 0, cy + bandW / 2);
+    ribGrad2.addColorStop(0, '#a9803e');
+    ribGrad2.addColorStop(0.5, '#e3c07d');
+    ribGrad2.addColorStop(1, '#a9803e');
+    ctx.fillStyle = ribGrad2;
+    ctx.fillRect(0, cy - bandW / 2, w, bandW);
+
+    // thin edge lines on ribbon
+    ctx.strokeStyle = 'rgba(120,90,40,0.4)';
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.moveTo(cx - bandW / 2, 0); ctx.lineTo(cx - bandW / 2, h);
+    ctx.moveTo(cx + bandW / 2, 0); ctx.lineTo(cx + bandW / 2, h);
+    ctx.moveTo(0, cy - bandW / 2); ctx.lineTo(w, cy - bandW / 2);
+    ctx.moveTo(0, cy + bandW / 2); ctx.lineTo(w, cy + bandW / 2);
+    ctx.stroke();
+
+    // bow at center
+    drawBow(cx, cy, bandW);
+  }
+
+  function drawBow(cx, cy, bandW) {
+    const scale = bandW / 34;
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.scale(scale, scale);
+
+    function loop(sign) {
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.bezierCurveTo(sign * 6, -22, sign * 34, -18, sign * 30, 2);
+      ctx.bezierCurveTo(sign * 34, 20, sign * 6, 20, 0, 0);
+      ctx.closePath();
+      const g = ctx.createLinearGradient(0, -20, 0, 20);
+      g.addColorStop(0, '#f0d08f');
+      g.addColorStop(0.5, '#cba35c');
+      g.addColorStop(1, '#a9803e');
+      ctx.fillStyle = g;
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(110,80,30,0.5)';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+
+    loop(-1);
+    loop(1);
+
+    // tails
+    ctx.beginPath();
+    ctx.moveTo(-4, 6);
+    ctx.lineTo(-12, 34);
+    ctx.lineTo(-2, 28);
+    ctx.lineTo(0, 40);
+    ctx.lineTo(4, 28);
+    ctx.lineTo(12, 34);
+    ctx.lineTo(4, 6);
+    ctx.closePath();
+    ctx.fillStyle = '#bd8f4d';
+    ctx.fill();
+
+    // knot
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 9, 7, 0, 0, Math.PI * 2);
+    const kg = ctx.createRadialGradient(0, -2, 1, 0, 0, 10);
+    kg.addColorStop(0, '#f3d99a');
+    kg.addColorStop(1, '#a9803e');
+    ctx.fillStyle = kg;
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(110,80,30,0.6)';
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  let isDown = false;
+  let lastPoint = null;
+
+  function getPos(evt) {
+    const rect = canvas.getBoundingClientRect();
+    const point = evt.touches ? evt.touches[0] : evt;
+    return {
+      x: point.clientX - rect.left,
+      y: point.clientY - rect.top
+    };
+  }
+
+  function scratchAt(x, y) {
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.beginPath();
+    ctx.arc(x, y, 22, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  function scratchLine(a, b) {
+    const dist = Math.hypot(b.x - a.x, b.y - a.y);
+    const steps = Math.max(1, Math.floor(dist / 6));
+    for (let i = 0; i <= steps; i++) {
+      const t = i / steps;
+      scratchAt(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t);
+    }
+  }
+
+  function fadeHintOnce() {
+    if (!hintFaded) {
+      hintFaded = true;
+      hint.classList.add('hidden-hint');
+      tag.classList.add('hidden-tag');
+    }
+  }
+
+  function checkProgress() {
+    const rect = frame.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    const sampleStep = 6;
+    let cleared = 0;
+    let total = 0;
+    const w = canvas.width;
+    const h = canvas.height;
+    const imgData = ctx.getImageData(0, 0, w, h).data;
+    for (let y = 0; y < h; y += sampleStep * dpr) {
+      for (let x = 0; x < w; x += sampleStep * dpr) {
+        const idx = (Math.floor(y) * w + Math.floor(x)) * 4;
+        total++;
+        if (imgData[idx + 3] < 60) cleared++;
+      }
+    }
+    const pct = cleared / total;
+    if (pct > 0.5 && !revealed) {
+      revealGift();
+    }
+  }
+
+  function revealGift() {
+    revealed = true;
+    canvas.classList.add('faded');
+    hint.classList.add('hidden-hint');
+    tag.classList.add('hidden-tag');
+    fallbackBtn.classList.add('hidden-fallback');
+    launchPetals();
+  }
+
+  function launchPetals() {
+    const emojis = ['🌸', '✨', '💗', '🎀'];
+    for (let i = 0; i < 26; i++) {
+      setTimeout(() => {
+        const p = document.createElement('div');
+        p.className = 'petal';
+        p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        p.style.left = Math.random() * 100 + 'vw';
+        p.style.fontSize = (0.9 + Math.random() * 0.9) + 'rem';
+        p.style.animationDuration = (3.5 + Math.random() * 2.5) + 's';
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 7000);
+      }, i * 90);
+    }
+  }
+
+  function handleStart(evt) {
+    isDown = true;
+    fadeHintOnce();
+    const pos = getPos(evt);
+    scratchAt(pos.x, pos.y);
+    lastPoint = pos;
+  }
+  function handleMove(evt) {
+    if (!isDown) return;
+    evt.preventDefault();
+    const pos = getPos(evt);
+    scratchLine(lastPoint, pos);
+    lastPoint = pos;
+  }
+  function handleEnd() {
+    if (!isDown) return;
+    isDown = false;
+    checkProgress();
+  }
+
+  canvas.addEventListener('mousedown', handleStart);
+  canvas.addEventListener('mousemove', handleMove);
+  window.addEventListener('mouseup', handleEnd);
+
+  canvas.addEventListener('touchstart', handleStart, { passive: true });
+  canvas.addEventListener('touchmove', handleMove, { passive: false });
+  canvas.addEventListener('touchend', handleEnd);
+
+  fallbackBtn.addEventListener('click', () => {
+    if (!revealed) revealGift();
+  });
+
+  window.addEventListener('resize', sizeCanvas);
+  sizeCanvas();
+})();
+</script>
+
+</body>
+</html>
